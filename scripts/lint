@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+if [ ! -d "venv" ] || ! venv/bin/python --version &>/dev/null; then
+    scripts/setup
+fi
+
+# shellcheck source=/dev/null
+source venv/bin/activate
+
+pre-commit run --all-files

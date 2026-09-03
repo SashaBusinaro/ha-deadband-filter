@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Setup",
+            "type": "shell",
+            "command": "scripts/setup",
+            "problemMatcher": []
+        },
+        {
+            "label": "Lint",
+            "type": "shell",
+            "command": "scripts/lint",
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Home Assistant",
+            "type": "shell",
+            "command": "scripts/develop",
+            "isBackground": true,
+            "problemMatcher": []
+        }
+    ]
+}
