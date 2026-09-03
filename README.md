@@ -40,25 +40,49 @@ It **reduces database writes to SQLite by 90–95%** by eliminating background j
 
 ## Installation
 
-### Method 1: Via HACS (Recommended)
+### Step 1: Install the Integration
 
-1. Open **HACS** in Home Assistant.
-2. Click the three dots in the top right corner $\rightarrow$ **Custom repositories**.
-3. Add `https://github.com/SashaBusinaro/ha-deadband-filter` with category **Integration**.
-4. Search for **Deadband Filter** and click **Download**.
-5. **Restart Home Assistant**.
+**Prerequisites:** This integration requires Home Assistant 2026.8.0 or newer and [HACS](https://hacs.xyz/) (Home Assistant Community Store) to be installed.
 
-### Method 2: Manual Installation
+Click the button below to open the integration directly in HACS:
 
-1. Download the `custom_components/deadband_filter/` directory from this repository.
-2. Copy it to your Home Assistant's `custom_components/` folder.
-3. Restart Home Assistant.
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SashaBusinaro&repository=ha-deadband-filter&category=integration)
 
----
+Then:
 
-## Configuration
+1. Click "Download" to install the integration
+2. **Restart Home Assistant** (required after installation)
 
-### Option 1: YAML Configuration
+> [!NOTE]
+> The My Home Assistant redirect will first take you to a landing page. Click the button there to open your Home Assistant instance.
+
+<details>
+<summary><strong>Manual Installation (Advanced)</strong></summary>
+
+If you prefer not to use HACS:
+
+1. Download the `custom_components/deadband_filter/` folder from this repository
+2. Copy it to your Home Assistant's `custom_components/` directory
+3. Restart Home Assistant
+
+</details>
+
+### Step 2: Configure the Integration
+
+**Important:** Complete Step 1 and restart Home Assistant before proceeding.
+
+#### Option 1: One-Click Setup
+
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=deadband_filter)
+
+#### Option 2: Manual Setup (UI)
+
+1. Go to **Settings** → **Devices & Services**
+2. Click **"+ Add Integration"** (or go to **Helpers** → **"+ Create Helper"**)
+3. Search for "Deadband Filter"
+4. Follow the setup wizard
+
+#### Option 3: YAML Configuration
 
 Add the sensor platform under `sensor:` in your `configuration.yaml`:
 
@@ -66,20 +90,13 @@ Add the sensor platform under `sensor:` in your `configuration.yaml`:
 sensor:
   - platform: deadband_filter
     source: sensor.power_home_instant
-    name: "Power Home Filtered"       # Optional (defaults to '{Source Name} Filtered')
+    name: "Power Home Filtered"       # Optional (defaults to source name with 'Filtered' suffix)
     delta: 40                         # Optional (minimum absolute variation to publish)
     percentage: 5                     # Optional (minimum % variation, e.g. 5 for 5%)
     heartbeat: 00:05:00               # Optional (time period or seconds, e.g. 300)
     precision: 1                      # Optional (decimal rounding precision)
     unique_id: power_home_filtered    # Optional
 ```
-
-### Option 2: UI Configuration (Helper)
-
-1. Navigate to **Settings** $\rightarrow$ **Devices & Services** $\rightarrow$ **Helpers**.
-2. Click **+ Create Helper** and choose **Deadband Filter** (or search via **Add Integration**).
-3. Select your source sensor, and define your delta, percentage, heartbeat, and precision.
-4. Click **Submit**. You can modify parameters anytime by opening the helper and clicking **Configure**.
 
 ---
 
