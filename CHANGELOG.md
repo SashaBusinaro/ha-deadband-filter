@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/SashaBusinaro/ha-deadband-filter/compare/v1.0.0...v1.0.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* safe state restoration attribute access and add services.yaml ([cd8a912](https://github.com/SashaBusinaro/ha-deadband-filter/commit/cd8a91205c1b1ddbcb34ad19fdc73006af06f2d6))
+
 ## [1.0.0](https://github.com/SashaBusinaro/ha-deadband-filter/compare/v0.1.0...v1.0.0) (2026-09-03)
 
 
