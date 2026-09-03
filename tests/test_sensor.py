@@ -92,6 +92,99 @@ def test_sensor_init() -> None:
     assert sensor.available is True
 
 
+def test_sensor_init_from_entity_registry_name() -> None:
+    """Test sensor initialization using entity registry configured name."""
+    hass = MagicMock()
+    mock_entry = MagicMock()
+    mock_entry.name = "Power Home Appliances"
+    mock_entry.original_name = "Shelly Power"
+
+    mock_ent_reg = MagicMock()
+    mock_ent_reg.async_get.return_value = mock_entry
+    hass.data = {"entity_registry": mock_ent_reg}
+    hass.states.get.return_value = None
+
+    options = DeadbandFilterOptions(delta=15.0)
+    sensor = DeadbandFilterSensor(
+        hass=hass,
+        source_entity_id="sensor.shellyem_channel_1_power",
+        custom_name=None,
+        unique_id=None,
+        options=options,
+    )
+
+    assert sensor.name == "Power Home Appliances Filtered"
+    assert sensor.unique_id == "sensor.shellyem_channel_1_power_deadband_filtered"
+
+
+def test_sensor_init_from_entity_registry_original_name() -> None:
+    """Test sensor initialization using original_name when name is unset."""
+    hass = MagicMock()
+    mock_entry = MagicMock()
+    mock_entry.name = None
+    mock_entry.original_name = "Power Home Appliances"
+
+    mock_ent_reg = MagicMock()
+    mock_ent_reg.async_get.return_value = mock_entry
+    hass.data = {"entity_registry": mock_ent_reg}
+    hass.states.get.return_value = None
+
+    options = DeadbandFilterOptions(delta=15.0)
+    sensor = DeadbandFilterSensor(
+        hass=hass,
+        source_entity_id="sensor.shellyem_channel_1_power",
+        custom_name=None,
+        unique_id=None,
+        options=options,
+    )
+
+    assert sensor.name == "Power Home Appliances Filtered"
+
+
+def test_sensor_init_from_source_state_when_registry_empty() -> None:
+    """Test sensor initialization using source state name when registry empty."""
+    hass = MagicMock()
+    mock_ent_reg = MagicMock()
+    mock_ent_reg.async_get.return_value = None
+    hass.data = {"entity_registry": mock_ent_reg}
+    hass.states.get.return_value = State(
+        "sensor.power_raw", "100", {"friendly_name": "Living Room Power"}
+    )
+
+    options = DeadbandFilterOptions(delta=15.0)
+    sensor = DeadbandFilterSensor(
+        hass=hass,
+        source_entity_id="sensor.power_raw",
+        custom_name=None,
+        unique_id=None,
+        options=options,
+    )
+
+    assert sensor.name == "Living Room Power Filtered"
+
+
+def test_sensor_init_custom_name_override() -> None:
+    """Test custom name overrides registry and state."""
+    hass = MagicMock()
+    mock_entry = MagicMock()
+    mock_entry.name = "Power Home Appliances"
+
+    mock_ent_reg = MagicMock()
+    mock_ent_reg.async_get.return_value = mock_entry
+    hass.data = {"entity_registry": mock_ent_reg}
+
+    options = DeadbandFilterOptions(delta=15.0)
+    sensor = DeadbandFilterSensor(
+        hass=hass,
+        source_entity_id="sensor.shellyem_channel_1_power",
+        custom_name="Custom Filtered Name",
+        unique_id=None,
+        options=options,
+    )
+
+    assert sensor.name == "Custom Filtered Name"
+
+
 def test_delta_filtering() -> None:
     """Test absolute delta threshold filtering."""
     options = DeadbandFilterOptions(delta=40.0)

@@ -32,6 +32,7 @@ from homeassistant.core import (
     split_entity_id,
 )
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event
 from homeassistant.helpers.reload import async_setup_reload_service
 from homeassistant.util import dt as dt_util
@@ -193,14 +194,34 @@ class DeadbandFilterSensor(RestoreSensor, SensorEntity):
         if custom_name:
             self._attr_name = custom_name
         else:
+            try:
+                ent_reg = er.async_get(hass)
+                source_entry = ent_reg.async_get(source_entity_id)
+            except KeyError, AttributeError:
+                source_entry = None
+
             source_state = hass.states.get(source_entity_id)
-            if source_state and source_state.name:
-                self._attr_name = f"{source_state.name} {DEFAULT_NAME_SUFFIX}"
-            else:
-                object_id = split_entity_id(source_entity_id)[1]
-                self._attr_name = (
-                    f"{object_id.replace('_', ' ').title()} {DEFAULT_NAME_SUFFIX}"
+
+            if source_entry and (
+                (isinstance(source_entry.name, str) and source_entry.name)
+                or (
+                    isinstance(source_entry.original_name, str)
+                    and source_entry.original_name
                 )
+            ):
+                base_name = source_entry.name or source_entry.original_name
+            elif (
+                source_state
+                and isinstance(source_state.name, str)
+                and source_state.name
+            ):
+                base_name = source_state.name
+            else:
+                base_name = (
+                    split_entity_id(source_entity_id)[1].replace("_", " ").title()
+                )
+
+            self._attr_name = f"{base_name} {DEFAULT_NAME_SUFFIX}"
 
     async def async_added_to_hass(self) -> None:
         """Handle entity added to Home Assistant."""

@@ -5,8 +5,9 @@ from typing import Any
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
-from homeassistant.core import callback
+from homeassistant.core import callback, split_entity_id
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
 
 from .const import (
@@ -80,11 +81,32 @@ class DeadbandFilterConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 title = cleaned_data.get(CONF_NAME)
                 if not title:
+                    try:
+                        ent_reg = er.async_get(self.hass)
+                        source_entry = ent_reg.async_get(source)
+                    except KeyError, AttributeError:
+                        source_entry = None
+
                     source_state = self.hass.states.get(source)
-                    if source_state and source_state.name:
-                        title = f"{source_state.name} {DEFAULT_NAME_SUFFIX}"
+
+                    if source_entry and (
+                        (isinstance(source_entry.name, str) and source_entry.name)
+                        or (
+                            isinstance(source_entry.original_name, str)
+                            and source_entry.original_name
+                        )
+                    ):
+                        base_name = source_entry.name or source_entry.original_name
+                    elif (
+                        source_state
+                        and isinstance(source_state.name, str)
+                        and source_state.name
+                    ):
+                        base_name = source_state.name
                     else:
-                        title = f"{source} {DEFAULT_NAME_SUFFIX}"
+                        base_name = split_entity_id(source)[1].replace("_", " ").title()
+
+                    title = f"{base_name} {DEFAULT_NAME_SUFFIX}"
 
                 return self.async_create_entry(
                     title=title,

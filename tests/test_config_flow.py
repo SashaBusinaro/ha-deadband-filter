@@ -50,6 +50,58 @@ async def test_config_flow_user_step_success() -> None:
 
 
 @pytest.mark.asyncio
+async def test_config_flow_title_from_entity_registry() -> None:
+    """Test config flow title resolution from entity registry when name is omitted."""
+    hass = MagicMock()
+    mock_entry = MagicMock()
+    mock_entry.name = "Power Home Appliances"
+    mock_entry.original_name = "Shelly Power"
+
+    mock_ent_reg = MagicMock()
+    mock_ent_reg.async_get.return_value = mock_entry
+    hass.data = {"entity_registry": mock_ent_reg}
+    hass.states.get.return_value = None
+
+    flow = DeadbandFilterConfigFlow()
+    flow.hass = hass
+
+    with patch.object(flow, "async_set_unique_id", return_value=None):
+        result = await flow.async_step_user(
+            user_input={
+                CONF_SOURCE: "sensor.shellyem_channel_1_power",
+                CONF_DELTA: 15.0,
+            }
+        )
+
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["title"] == "Power Home Appliances Filtered"
+
+
+@pytest.mark.asyncio
+async def test_config_flow_title_fallback_object_id() -> None:
+    """Test config flow title fallback to object ID when registry and state missing."""
+    hass = MagicMock()
+    mock_ent_reg = MagicMock()
+    mock_ent_reg.async_get.return_value = None
+    hass.data = {"entity_registry": mock_ent_reg}
+    hass.states.get.return_value = None
+
+    flow = DeadbandFilterConfigFlow()
+    flow.hass = hass
+
+    with patch.object(flow, "async_set_unique_id", return_value=None):
+        result = await flow.async_step_user(
+            user_input={
+                CONF_SOURCE: "sensor.shellyem_channel_1_power",
+                CONF_DELTA: 15.0,
+            }
+        )
+
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["title"] == "Shellyem Channel 1 Power Filtered"
+
+
+@pytest.mark.asyncio
 async def test_config_flow_user_step_no_criteria() -> None:
     """Test config flow validation error when no criteria provided."""
     hass = MagicMock()
