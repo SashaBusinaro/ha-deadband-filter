@@ -1,0 +1,16 @@
+{
+  "domain": "deadband_filter",
+  "name": "Deadband Filter",
+  "codeowners": [
+    "@SashaBusinaro"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/SashaBusinaro/ha-deadband-filter",
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/SashaBusinaro/ha-deadband-filter/issues",
+  "loggers": [
+    "custom_components.deadband_filter"
+  ],
+  "version": "0.1.0"
+}

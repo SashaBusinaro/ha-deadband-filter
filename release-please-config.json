@@ -7,7 +7,7 @@
       "extra-files": [
         {
           "type": "json",
-          "path": "custom_components/integration_blueprint/manifest.json",
+          "path": "custom_components/deadband_filter/manifest.json",
           "jsonpath": "$.version"
         }
       ],

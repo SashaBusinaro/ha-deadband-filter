@@ -1,0 +1,61 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sensore Deadband Filter",
+        "description": "Crea un'entità sensore filtrata che si aggiorna solo su variazioni significative o allo scadere dell'heartbeat, riducendo le scritture su database e preservando le statistiche a lungo termine (LTS).",
+        "data": {
+          "source": "Sensore sorgente",
+          "name": "Nome (opzionale)",
+          "delta": "Variazione assoluta (delta)",
+          "percentage": "Variazione percentuale (%)",
+          "heartbeat": "Intervallo di heartbeat",
+          "precision": "Precisione decimale (opzionale)"
+        },
+        "data_description": {
+          "source": "Il sensore numerico sorgente ad alta frequenza da filtrare.",
+          "name": "Nome descrittivo personalizzato. Default: nome sensore sorgente con suffisso 'Filtered'.",
+          "delta": "Variazione assoluta minima necessaria per pubblicare un aggiornamento (es. 40 W).",
+          "percentage": "Variazione percentuale minima necessaria per pubblicare un aggiornamento (es. 5 per 5%).",
+          "heartbeat": "Tempo massimo prima di forzare la pubblicazione dello stato (es. 5 minuti).",
+          "precision": "Numero opzionale di cifre decimali a cui arrotondare il valore."
+        }
+      }
+    },
+    "error": {
+      "no_filter_criteria": "È necessario configurare almeno uno tra delta, percentuale o heartbeat.",
+      "invalid_delta": "Il delta deve essere un numero positivo.",
+      "invalid_percentage": "La percentuale deve essere un numero positivo.",
+      "invalid_heartbeat": "L'heartbeat deve essere una durata positiva."
+    },
+    "abort": {
+      "already_configured": "Un filtro deadband per questo sensore sorgente è già configurato."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configura Deadband Filter",
+        "description": "Modifica le soglie di filtro e l'intervallo di heartbeat.",
+        "data": {
+          "delta": "Variazione assoluta (delta)",
+          "percentage": "Variazione percentuale (%)",
+          "heartbeat": "Intervallo di heartbeat",
+          "precision": "Precisione decimale (opzionale)"
+        },
+        "data_description": {
+          "delta": "Variazione assoluta minima necessaria per pubblicare un aggiornamento.",
+          "percentage": "Variazione percentuale minima necessaria per pubblicare un aggiornamento.",
+          "heartbeat": "Tempo massimo prima di forzare la pubblicazione dello stato.",
+          "precision": "Numero opzionale di cifre decimali a cui arrotondare il valore."
+        }
+      }
+    },
+    "error": {
+      "no_filter_criteria": "È necessario configurare almeno uno tra delta, percentuale o heartbeat.",
+      "invalid_delta": "Il delta deve essere un numero positivo.",
+      "invalid_percentage": "La percentuale deve essere un numero positivo.",
+      "invalid_heartbeat": "L'heartbeat deve essere una durata positiva."
+    }
+  }
+}

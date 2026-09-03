@@ -21,3 +21,4 @@ repos:
     hooks:
       - id: codespell
         args: [--ignore-words-list=hass]
+        exclude: ^custom_components/.*/translations/.*(?<!en)\.json$

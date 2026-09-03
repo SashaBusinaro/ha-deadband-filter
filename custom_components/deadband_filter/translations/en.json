@@ -1,0 +1,61 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Deadband Filter Sensor",
+        "description": "Create a filtered sensor that updates only on significant changes or heartbeat timeout, reducing database writes while preserving Long-Term Statistics (LTS).",
+        "data": {
+          "source": "Source sensor",
+          "name": "Name (optional)",
+          "delta": "Absolute variation (delta)",
+          "percentage": "Percentage variation (%)",
+          "heartbeat": "Heartbeat duration",
+          "precision": "Decimal precision (optional)"
+        },
+        "data_description": {
+          "source": "The high-frequency numeric source sensor to filter.",
+          "name": "Custom friendly name. Defaults to source name with 'Filtered' suffix.",
+          "delta": "Minimum absolute value change required to publish an update (e.g. 40 W).",
+          "percentage": "Minimum percentage change required to publish an update (e.g. 5 for 5%).",
+          "heartbeat": "Maximum time elapsed before forcing a state publication (e.g. 5 minutes).",
+          "precision": "Optional number of decimal places to round values to."
+        }
+      }
+    },
+    "error": {
+      "no_filter_criteria": "At least one of delta, percentage, or heartbeat must be configured.",
+      "invalid_delta": "Delta must be a positive number.",
+      "invalid_percentage": "Percentage must be a positive number.",
+      "invalid_heartbeat": "Heartbeat must be a positive duration."
+    },
+    "abort": {
+      "already_configured": "A deadband filter for this source sensor is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configure Deadband Filter",
+        "description": "Adjust filtering thresholds and heartbeat interval.",
+        "data": {
+          "delta": "Absolute variation (delta)",
+          "percentage": "Percentage variation (%)",
+          "heartbeat": "Heartbeat duration",
+          "precision": "Decimal precision (optional)"
+        },
+        "data_description": {
+          "delta": "Minimum absolute value change required to publish an update.",
+          "percentage": "Minimum percentage change required to publish an update.",
+          "heartbeat": "Maximum time elapsed before forcing a state publication.",
+          "precision": "Optional number of decimal places to round values to."
+        }
+      }
+    },
+    "error": {
+      "no_filter_criteria": "At least one of delta, percentage, or heartbeat must be configured.",
+      "invalid_delta": "Delta must be a positive number.",
+      "invalid_percentage": "Percentage must be a positive number.",
+      "invalid_heartbeat": "Heartbeat must be a positive duration."
+    }
+  }
+}

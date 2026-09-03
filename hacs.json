@@ -1,5 +1,5 @@
 {
-    "name": "YOUR_INTEGRATION_NAME",
+    "name": "Deadband Filter",
     "homeassistant": "2026.9.0",
     "hacs": "2.0.5"
 }
