@@ -1,8 +1,9 @@
 """Unit tests for the DeadbandFilterSensor platform and deadband logic."""
 
 from datetime import UTC, datetime, timedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
+import pytest
 from homeassistant.const import (
     ATTR_DEVICE_CLASS,
     ATTR_ICON,
@@ -424,3 +425,30 @@ def test_metadata_inheritance() -> None:
         assert sensor.icon == "mdi:thermometer"
         assert sensor.native_value == 22.3  # Rounded with precision=1
         assert sensor.async_write_ha_state.call_count == 1
+
+
+@pytest.mark.asyncio
+async def test_restore_state_with_metadata() -> None:
+    """Test state and metadata restoration across Home Assistant restarts."""
+    options = DeadbandFilterOptions(delta=10.0, precision=1)
+    sensor = _create_test_sensor(options, source_id="sensor.power")
+
+    last_state = State(
+        "sensor.power_filtered",
+        "123.45",
+        attributes={
+            ATTR_UNIT_OF_MEASUREMENT: "W",
+            ATTR_DEVICE_CLASS: "power",
+            ATTR_STATE_CLASS: "measurement",
+            ATTR_ICON: "mdi:flash",
+        },
+    )
+    sensor.async_get_last_state = AsyncMock(return_value=last_state)
+
+    await sensor._restore_state()
+
+    assert sensor.native_value == 123.5
+    assert sensor.native_unit_of_measurement == "W"
+    assert sensor.device_class == "power"
+    assert sensor.state_class == "measurement"
+    assert sensor.icon == "mdi:flash"

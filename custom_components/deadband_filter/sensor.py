@@ -180,6 +180,10 @@ class DeadbandFilterSensor(RestoreSensor, SensorEntity):
         self._heartbeat_unsub: CALLBACK_TYPE | None = None
         self._suppressed_count = 0
         self._attr_available = True
+        self._attr_native_unit_of_measurement = None
+        self._attr_device_class = None
+        self._attr_state_class = None
+        self._attr_icon = None
 
         if unique_id:
             self._attr_unique_id = unique_id
@@ -234,13 +238,13 @@ class DeadbandFilterSensor(RestoreSensor, SensorEntity):
                 self._last_published_time = last_state.last_updated
 
         attrs = last_state.attributes
-        if not self._attr_native_unit_of_measurement:
+        if not self.native_unit_of_measurement:
             self._attr_native_unit_of_measurement = attrs.get(ATTR_UNIT_OF_MEASUREMENT)
-        if not self._attr_device_class:
+        if not self.device_class:
             self._attr_device_class = attrs.get(ATTR_DEVICE_CLASS)
-        if not self._attr_state_class:
+        if not self.state_class:
             self._attr_state_class = attrs.get(ATTR_STATE_CLASS)
-        if not self._attr_icon:
+        if not self.icon:
             self._attr_icon = attrs.get(ATTR_ICON)
 
     def _initialize_from_source(self) -> None:
